@@ -1,15 +1,15 @@
-package exercises.zad02;
+package exercises.zad06;
 
 import java.util.Iterator;
 
 //Implementirati generičku klasu koja predstavlja niz.
-//Koristiti ArrayList i Iterator.
+// Kreirati Iterator koji prolazi kroz svaki 5 element niza.
 public class main {
     public static void main(String[] args) {
-        DynamicArray<Integer> arr = new DynamicArray<Integer>();
-        arr.add(5);
-        arr.add(7);
-        arr.add(1);
+        Array<Integer> arr = new Array<Integer>();
+        for (int i = 0; i < 15; i++) {
+            arr.add(i);
+        }
 
         Iterator<Integer> iterator = arr.iterator();
         while (iterator.hasNext()) {

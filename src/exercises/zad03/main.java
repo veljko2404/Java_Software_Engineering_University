@@ -13,34 +13,40 @@ public class main {
         ArrayList<ArrayList<Integer>> matrix = new ArrayList<ArrayList<Integer>>();
 
         ArrayList<Integer> row = new ArrayList<Integer>();
-        row.add(1); row.add(2); row.add(3);
+        row.add(1);
+        row.add(2);
+        row.add(3);
         matrix.add(row);
 
         row = new ArrayList<>();
-        row.add(4); row.add(5); row.add(6);
+        row.add(4);
+        row.add(5);
+        row.add(6);
         matrix.add(row);
 
         row = new ArrayList<>();
-        row.add(7); row.add(8); row.add(9);
+        row.add(7);
+        row.add(8);
+        row.add(9);
         matrix.add(row);
 
         int n = 3, m = 3;
 
-        for(int i=0;i<n;i++){
-            for(int j=0;j<m;j++){
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
                 System.out.print(STR."\{matrix.get(i).get(j)} ");
             }
             System.out.println();
         }
 
         int mainSum = 0;
-        for(int i=0;i<n;i++){
-            mainSum+=matrix.get(i).get(i);
+        for (int i = 0; i < n; i++) {
+            mainSum += matrix.get(i).get(i);
         }
         System.out.println("Main sum: " + mainSum);
 
         int secondarySum = 0;
-        for(int i=0;i<n;i++){
+        for (int i = 0; i < n; i++) {
             secondarySum += matrix.get(i).get(m - 1 - i);
         }
         System.out.println("Secondary sum: " + secondarySum);

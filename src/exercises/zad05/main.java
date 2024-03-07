@@ -9,11 +9,16 @@ import java.util.Iterator;
 public class main {
     public static void main(String[] args) {
         Pair<Integer> pair = new Pair<Integer>();
-        pair.addN1(5); pair.addN1(3); pair.addN1(2);
-        pair.addN2(8); pair.addN2(7); pair.addN2(9); pair.addN2(6);
+        pair.addN1(5);
+        pair.addN1(3);
+        pair.addN1(2);
+        pair.addN2(8);
+        pair.addN2(7);
+        pair.addN2(9);
+        pair.addN2(6);
 
         Iterator<Integer> iterator = pair.iterator();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             System.out.println(iterator.next());
         }
     }
