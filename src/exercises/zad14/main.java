@@ -25,7 +25,7 @@ prosecnu ocenu.
 public class main {
     public static void main(String[] args) throws FileNotFoundException {
         HashMap<String, HashMap<String, Integer>> data = new HashMap<>();
-        URL url = exercises.zad11.main.class.getResource("podaci.dat");
+        URL url = main.class.getResource("podaci.dat");
         File file = new File(url.getPath());
         Scanner scanner = new Scanner(file);
 
