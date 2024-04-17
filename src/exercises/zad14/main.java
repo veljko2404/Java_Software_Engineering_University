@@ -65,7 +65,7 @@ public class main {
             inputUser = data.get(userIterator.next());
             if (inputUser.containsKey(movie)) {
                 numOfMovies++;
-                avgRating+=inputUser.get(movie);
+                avgRating += inputUser.get(movie);
             }
         }
         avgRating /= numOfMovies;
