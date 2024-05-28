@@ -2,7 +2,10 @@ package exercises.zad25;
 
 import exercises.zad06.Array;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /*
 Knjiga Ilustrovanaistorija umetnosti se bavi pravcima u umetnosti, navodeći tekstualne
@@ -41,8 +44,32 @@ Na standardnom izlazu prikazati vrednosti svih funkcija 1 do 3 za knjigu.
 */
 interface Element {
     int povrsinaSvihSlika();
+
     int sumaKaraktera();
+
     int brojKarakteraNaParnojDubini(int d);
+
+    public ArrayList<Okvir> naciOkvire();
+
+    public Par maxPravaca(ArrayList<Okvir> okviri);
+}
+
+class Par {
+    private Slika slika;
+    private int brojPravaca;
+
+    public Par(Slika slika, int brojPravaca) {
+        this.slika = slika;
+        this.brojPravaca = brojPravaca;
+    }
+
+    public Slika getSlika() {
+        return slika;
+    }
+
+    public int getBrojPravaca() {
+        return brojPravaca;
+    }
 }
 
 class Pasus implements Element {
@@ -66,8 +93,18 @@ class Pasus implements Element {
 
     @Override
     public int brojKarakteraNaParnojDubini(int d) {
-        if(d%2==0) return broj_karaktera;
+        if (d % 2 == 0) return broj_karaktera;
         else return 0;
+    }
+
+    @Override
+    public ArrayList<Okvir> naciOkvire() {
+        return new ArrayList<Okvir>();
+    }
+
+    @Override
+    public Par maxPravaca(ArrayList<Okvir> okviri) {
+        return null;
     }
 }
 
@@ -95,6 +132,22 @@ class Slika implements Element {
     public int brojKarakteraNaParnojDubini(int d) {
         return 0;
     }
+
+    @Override
+    public ArrayList<Okvir> naciOkvire() {
+        return new ArrayList<Okvir>();
+    }
+
+    @Override
+    public Par maxPravaca(ArrayList<Okvir> okviri) {
+        int broj = 0;
+        for (int i = 0; i < okviri.size(); i++) {
+            if (godina >= okviri.get(i).getGodinaOd() && godina <= okviri.get(i).getGodinaDo()) {
+                broj++;
+            }
+        }
+        return new Par(this, broj);
+    }
 }
 
 class Celina implements Element {
@@ -106,6 +159,10 @@ class Celina implements Element {
 
     public Celina(ArrayList<Element> list) {
         this.list = list;
+    }
+
+    public Celina() {
+        list=new ArrayList<>();
     }
 
     public void dodajElement(Element e) {
@@ -129,8 +186,32 @@ class Celina implements Element {
     @Override
     public int brojKarakteraNaParnojDubini(int d) {
         int result = 0;
-        for (int i = 0; i < list.size(); i++) result += list.get(i).brojKarakteraNaParnojDubini(d+1);
+        for (int i = 0; i < list.size(); i++) result += list.get(i).brojKarakteraNaParnojDubini(d + 1);
         return result;
+    }
+
+    @Override
+    public ArrayList<Okvir> naciOkvire() {
+        ArrayList<Okvir> okviri = new ArrayList<Okvir>();
+        for (int i = 0; i < list.size(); i++) okviri.addAll(list.get(i).naciOkvire());
+        return okviri;
+    }
+
+    @Override
+    public Par maxPravaca(ArrayList<Okvir> okviri) {
+        Par rezultat = new Par(null, 0);
+        for (int i = 0; i < list.size(); i++) {
+            Par par_i = list.get(i).maxPravaca(okviri);
+            if (par_i != null) {
+                if (par_i.getBrojPravaca() > -rezultat.getBrojPravaca()) {
+                    rezultat = par_i;
+                }
+            }
+        }
+        if (rezultat.getSlika() == null)
+            return null;
+        else
+            return new Par(rezultat.getSlika(), rezultat.getBrojPravaca());
     }
 }
 
@@ -138,14 +219,24 @@ class Pravac extends Celina {
     private String naziv;
     private int godinaOd, godinaDo;
 
-    public Pravac(ArrayList<Element> list) {
-        super(list);
+    public Pravac(String naziv, int godinaOd, int godinaDo) {
+        super();
+        this.naziv = naziv;
+        this.godinaOd = godinaOd;
+        this.godinaDo = godinaDo;
+    }
+
+    @Override
+    public ArrayList<Okvir> naciOkvire() {
+        ArrayList<Okvir> okviri = super.naciOkvire();
+        okviri.add(new Okvir(godinaOd, godinaDo));
+        return okviri;
     }
 }
 
 class Knjiga extends Celina {
-    public Knjiga(ArrayList<Element> list) {
-        super(list);
+    public Knjiga() {
+        super();
     }
 
     @Override
@@ -153,15 +244,67 @@ class Knjiga extends Celina {
         if (e instanceof Pravac) super.dodajElement(e);
     }
 }
-class Okvir{
-    private int godinaOd,godinaDo;
+
+class Okvir {
+    private int godinaOd, godinaDo;
 
     public Okvir(int godinaOd, int godinaDo) {
         this.godinaOd = godinaOd;
         this.godinaDo = godinaDo;
     }
+
+    public int getGodinaOd() {
+        return godinaOd;
+    }
+
+    public int getGodinaDo() {
+        return godinaDo;
+    }
 }
-//24:40
+
+class Singleton{
+    private static Singleton instanca = null;
+    private Scanner s;
+    private Singleton() throws FileNotFoundException {
+        s=new Scanner(new File("ulaz.txt"));
+    }
+    public static Singleton getInstance() throws FileNotFoundException {
+        if(instanca==null) {
+            instanca = new Singleton();
+        }
+        return instanca;
+    }
+    public Element kreirajElement(String nazivElementa) throws FileNotFoundException {
+        Singleton singleton = getInstance();
+        if(nazivElementa=="Pasus"){
+            int v=s.nextInt();
+            int v_p=s.nextInt();
+            int broj=s.nextInt();
+            return new Pasus(v,v_p,broj);
+        }
+        if(nazivElementa=="Slika"){
+            int sirina=s.nextInt();
+            int visina=s.nextInt();
+            int visina_p=s.nextInt();
+            int godina=s.nextInt();
+            return new Slika(sirina,visina,visina_p,godina);
+        }
+        if(nazivElementa=="Celina"){
+            return new Celina();
+        }
+
+        if(nazivElementa=="Pravac"){
+            String naziv = s.nextLine();
+            int godinaOd=s.nextInt();
+            int godinaDo=s.nextInt();
+            return new Pravac(naziv,godinaOd,godinaDo);
+        }
+        if(nazivElementa=="Knjiga"){
+            return new Knjiga();
+        }
+        return null;
+    }
+}
 
 public class main {
     public static void main(String[] args) {
